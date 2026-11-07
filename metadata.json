@@ -1,0 +1,6 @@
+{
+  "name": "CoupleFit - Couples Fitness & Wellness Platform",
+  "description": "A premium, private fitness and wellness platform for couples to track nutrition, health goals, habits, and motivate each other through gamification.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

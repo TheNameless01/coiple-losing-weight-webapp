@@ -1,0 +1,1629 @@
+# MASTER BUILD PROMPT — COUPLES FITNESS & WELLNESS PLATFORM
+
+## 1. ROLE AND MISSION
+
+Act as a senior full-stack software architect, product designer, UX/UI designer, backend engineer, database architect, security engineer, QA engineer, and technical project manager.
+
+Your task is to DESIGN, IMPLEMENT, TEST, AND DELIVER a complete, production-minded web application for two romantic partners who want to improve their health, lose weight safely, track their nutrition, build healthy habits, and motivate each other through gamification.
+
+This is a real software project, not a demo, landing page, static prototype, or collection of disconnected screens.
+
+You must create a functional application with:
+- Real authentication and authorization.
+- Persistent database storage.
+- Personal health profiles.
+- Nutrition and calorie tracking.
+- Weight tracking and progress charts.
+- Water and activity tracking.
+- Wellness habits.
+- XP, levels, achievements, and quests.
+- Couple accounts and shared challenges.
+- Shared activity and encouragement.
+- Notifications.
+- English, French, and Arabic localization.
+- Full Arabic RTL support.
+- Responsive mobile-first design.
+- Installable Progressive Web App (PWA).
+
+**Do not merely describe how to build these features. Build them.**
+
+---
+
+# 2. PRODUCT VISION
+
+Create a premium, modern, mobile-first fitness and wellness application designed specifically for two partners.
+
+The application combines five major experiences:
+
+1. **Nutrition:** Track meals, calories, macronutrients, and food consumption.
+2. **Health progress:** Track weight, personal goals, and progress over time.
+3. **Activity and wellness:** Track water, exercise, sleep, mood, energy, and habits.
+4. **Gamification:** Earn XP, progress through levels, complete quests, and unlock achievements.
+5. **Together:** Connect two partners through shared progress, cooperative challenges, friendly competition, and social interaction.
+
+The application should feel like a premium fitness product with a subtle game layer.
+
+It must not feel like a childish game or an overly complicated medical application.
+
+## Core philosophy
+
+- Every user has independent health data and personal targets.
+- The couple has a shared space, but personal health information remains individually owned.
+- Both users can motivate each other.
+- Healthy consistency is more important than perfection.
+- Missing a day must never destroy accumulated progress.
+- Gamification must encourage healthy behavior, not dangerous dieting.
+- Health tracking must remain useful even if the user ignores all game features.
+- All important records must be editable and traceable.
+
+---
+
+# 3. PRODUCT CONFIGURATION
+
+Use these initial product decisions.
+
+| Decision | Requirement |
+|---|---|
+| Application type | Web application + PWA |
+| Initial users | Exactly two partners |
+| Registration | Private, invitation-only |
+| Languages | English, French, Arabic |
+| Development | Local development first |
+| Deployment | Decide later |
+| PWA | Required from the beginning |
+| Default units | Metric |
+| Main devices | Mobile phones, tablets, desktop |
+| Visual direction | Premium, modern, clean fitness aesthetic |
+| Health data | Separate per user |
+| Couple features | Shared space with two members |
+
+Do not add public registration or public community features.
+
+Do not require a paid external service for the initial local development environment.
+
+The actual product name has not been selected. Use a temporary configurable project name such as `CoupleFit` internally. Do not permanently hardcode the name into the interface.
+
+---
+
+# 4. REQUIRED TECHNOLOGY ARCHITECTURE
+
+Build a maintainable, modular, scalable application.
+
+## Preferred stack
+
+### Frontend
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- Reusable component architecture
+- React Hook Form
+- Zod validation
+- TanStack Query or an equivalent API-state solution
+- A suitable charting library
+
+### Backend
+- Python
+- FastAPI
+- Pydantic
+- SQLAlchemy
+- Alembic migrations
+- REST API
+
+### Database
+- PostgreSQL
+- UUID primary keys
+- UTC timestamps
+- Foreign keys
+- Appropriate indexes
+- Database constraints
+
+### Local infrastructure
+- Docker Compose
+- Separate frontend, backend, and database services
+- Persistent PostgreSQL volume
+- Environment variables
+- `.env.example`
+- Clear local setup documentation
+
+### PWA
+- Web app manifest
+- Application icons
+- Service worker
+- Installability
+- Offline fallback page
+- Safe caching strategy
+
+### Architecture requirements
+
+Use a modular monorepo structure.
+
+Suggested structure:
+
+```text
+couple-fitness/
+│
+├── apps/
+│   ├── web/
+│   │   ├── app/
+│   │   ├── components/
+│   │   ├── features/
+│   │   ├── hooks/
+│   │   ├── lib/
+│   │   ├── locales/
+│   │   ├── public/
+│   │   └── styles/
+│   │
+│   └── api/
+│       ├── app/
+│       │   ├── api/
+│       │   ├── core/
+│       │   ├── models/
+│       │   ├── schemas/
+│       │   ├── repositories/
+│       │   ├── services/
+│       │   └── workers/
+│       ├── migrations/
+│       └── tests/
+│
+├── infrastructure/
+│   └── docker/
+│
+├── docs/
+│   ├── PRODUCT_SPEC.md
+│   ├── DATABASE.md
+│   ├── API.md
+│   ├── SECURITY.md
+│   └── DEVELOPMENT.md
+│
+├── scripts/
+├── docker-compose.yml
+├── .env.example
+└── README.md
+```
+
+You may adjust the structure when necessary, but preserve separation of concerns.
+
+**Important architecture rule:** Do not silently replace the preferred architecture with a different stack.
+
+If your execution environment cannot run a Python FastAPI backend or PostgreSQL directly, explain the limitation clearly. Keep the intended architecture documented and implement a clean, replaceable local development adapter rather than pretending a frontend-only mock is a complete backend.
+
+Never claim that a feature is connected to a real backend when it only uses mock data.
+
+---
+
+# 5. USER ACCOUNTS AND AUTHENTICATION
+
+The initial system is private and designed for two people.
+
+## Account functionality
+
+Implement:
+
+- Registration through a valid invitation.
+- Login.
+- Logout.
+- Email verification architecture.
+- Password hashing.
+- Secure session handling.
+- Password reset architecture.
+- Current-user endpoint.
+- Profile editing.
+- Account settings.
+
+## Couple connection
+
+The first user creates a couple space and invites the second user.
+
+The second user accepts the invitation and joins.
+
+Rules:
+
+- Exactly two active members per couple.
+- Each user has an independent account.
+- Each user owns their own health and nutrition records.
+- A user cannot access another couple's information.
+- A user cannot access private records without permission.
+- Disconnecting must not delete personal health data.
+- Invitations must expire.
+- Invitation tokens must be single-use.
+- Store invitation token hashes rather than reusable raw tokens.
+
+For local development, provide a secure bootstrap process that allows the two initial accounts to be created without opening public registration.
+
+If email delivery is not configured, provide a clearly marked development-only invitation mechanism. Never expose development authentication shortcuts in production.
+
+---
+
+# 6. PERSONAL ONBOARDING AND HEALTH PROFILE
+
+Each partner completes an individual onboarding flow.
+
+Collect:
+
+- Display name.
+- Date of birth.
+- Height.
+- Current weight.
+- Target weight.
+- Relevant physiological input required by the selected metabolic calculation.
+- Activity level.
+- Weight goal.
+- Preferred rate of progress.
+- Preferred weighing frequency.
+- Measurement units.
+- Language.
+- Timezone.
+
+## Calculations
+
+Implement:
+
+- BMI.
+- BMR.
+- Estimated TDEE.
+- Suggested daily calorie target.
+- Suggested macronutrient targets.
+- Weight trend.
+
+Use the Mifflin-St Jeor equation as the initial BMR calculation method, with correct handling of its required inputs.
+
+Clearly label all estimates as estimates.
+
+Do not present calculations as medical diagnoses.
+
+## Health safety
+
+- Reject invalid or unrealistic values.
+- Do not encourage extreme calorie deficits.
+- Do not recommend unsafe weight-loss targets.
+- Do not automatically reduce calorie targets because of one weigh-in.
+- Use multiple measurements to assess weight trends.
+- Never award XP for rapid weight loss, starvation, restrictive eating, or excessive exercise.
+- Provide appropriate warnings when an input or target may be unsafe.
+- Keep health calculations separate from gamification.
+
+Allow users to review and update their goals.
+
+Preserve historical goal and calorie-target records.
+
+---
+
+# 7. HOME DASHBOARD
+
+Create a polished personal dashboard for each user.
+
+The dashboard should include:
+
+1. Greeting and current date.
+2. Current daily calorie target.
+3. Calories consumed.
+4. Remaining calories.
+5. Protein, carbohydrates, and fat.
+6. Meals logged today.
+7. Water consumption.
+8. Daily hydration target.
+9. Activity summary.
+10. Current weight and weight trend.
+11. Current XP.
+12. Current level.
+13. Daily quest progress.
+14. Weekly progress.
+15. Partner's shared progress preview.
+16. Recent achievements and notifications.
+
+Provide quick actions:
+
+- Add meal.
+- Log water.
+- Add weight.
+- Log activity.
+- Complete a habit.
+- View quests.
+
+The most important information should be visible without overwhelming the user.
+
+---
+
+# 8. NUTRITION AND FOOD TRACKING
+
+Create a complete nutrition-tracking module.
+
+## Food database
+
+Support:
+
+- International foods.
+- Algerian foods.
+- North African foods.
+- Packaged foods.
+- Custom foods.
+- User-created recipes.
+
+The internal food database should be structured so external providers can be integrated later.
+
+Do not assume that a free external database provides unrestricted commercial usage. Check licensing before integrating one.
+
+Start with a curated seed catalog containing useful common foods.
+
+## Nutritional information
+
+Support:
+
+- Calories.
+- Protein.
+- Carbohydrates.
+- Fat.
+- Fiber.
+- Sugar.
+- Sodium.
+
+Unknown nutritional values must be stored as unknown, not silently treated as zero.
+
+## Meal logging
+
+Support:
+
+- Breakfast.
+- Lunch.
+- Dinner.
+- Snacks.
+
+Users must be able to:
+
+- Search foods.
+- View food details.
+- Select serving size.
+- Enter quantity.
+- Log a meal.
+- Edit an entry.
+- Delete an entry.
+- Add custom foods.
+- Save favorite foods.
+- Create recipes.
+- View meal history.
+- Duplicate previous meals.
+
+Every food entry must have an accurate quantity and serving definition.
+
+Store a nutritional snapshot on each logged food entry so future changes to the food catalog do not rewrite historical records.
+
+## Food database confidence
+
+Distinguish:
+
+- Verified entries.
+- Unverified entries.
+- User-created entries.
+
+Make the source or confidence level visible where appropriate.
+
+## Future AI food features
+
+Prepare an extensible architecture for:
+
+- Food photo recognition.
+- Voice-based food logging.
+- Barcode scanning.
+- Nutrition label OCR.
+- Recipe URL importing.
+
+These features are future enhancements, not reasons to delay the initial application.
+
+AI-generated food estimates must require user review and confirmation before being saved.
+
+---
+
+# 9. WEIGHT AND HEALTH PROGRESS
+
+Create a dedicated progress section.
+
+Features:
+
+- Add weight measurement.
+- Edit own measurement.
+- Delete own measurement.
+- Weight history.
+- Weight trend chart.
+- Starting weight.
+- Current weight.
+- Target weight.
+- Total change.
+- Weekly progress.
+- Monthly progress.
+- Historical goals.
+
+Do not assume that every measurement represents real fat loss or gain.
+
+Show trends rather than misleading conclusions from individual measurements.
+
+Weight history must be preserved.
+
+---
+
+# 10. ACTIVITY AND WELLNESS
+
+Create an activity and wellness module.
+
+## Water tracking
+
+- Daily hydration target.
+- Quick-add buttons.
+- Custom quantity.
+- Entries in milliliters.
+- Daily progress.
+- Weekly history.
+- Hydration chart.
+
+## Physical activity
+
+Allow manual activity logging:
+
+- Walking.
+- Running.
+- Cycling.
+- Steps.
+- Other activities.
+
+Track:
+
+- Activity type.
+- Duration.
+- Distance when applicable.
+- Date and time.
+- Optional notes.
+
+Do not automatically add estimated exercise calories to the user's food budget by default.
+
+## Workouts
+
+Support:
+
+- Workout plans.
+- Exercise lists.
+- Workout sessions.
+- Completed sessions.
+- Exercise history.
+
+## Wellness
+
+Support:
+
+- Sleep duration.
+- Sleep quality.
+- Mood.
+- Energy level.
+- Custom habits.
+- Habit completion history.
+
+Optional future module:
+
+- Fasting timer and history.
+
+Never reward longer fasting duration with XP.
+
+---
+
+# 11. GAMIFICATION SYSTEM
+
+Gamification must be a first-class system, not a decorative interface.
+
+## XP
+
+Users earn experience points for verified healthy actions.
+
+Possible XP events include:
+
+- Logging meals.
+- Meeting hydration targets.
+- Completing workouts.
+- Completing wellness habits.
+- Completing daily quests.
+- Completing weekly quests.
+- Completing couple challenges.
+
+Create a configurable XP rules table.
+
+Initial XP values can be proposed and adjusted during development.
+
+Do not hardcode XP values throughout the application.
+
+## XP architecture
+
+The backend must own XP calculation.
+
+Implement:
+
+- XP transaction ledger.
+- Source event.
+- User ID.
+- XP amount.
+- Timestamp.
+- Reason.
+- Idempotency key.
+- Duplicate-event protection.
+
+Never allow the frontend to directly award XP.
+
+The same event must never grant XP twice.
+
+## Levels
+
+Implement:
+
+- Level definitions.
+- XP thresholds.
+- Current level.
+- XP progress to next level.
+- Level history.
+- Level-up notifications.
+
+Users should never lose accumulated XP or levels.
+
+## Achievements
+
+Create achievement categories:
+
+- Nutrition.
+- Hydration.
+- Activity.
+- Consistency.
+- Progress.
+- Couple teamwork.
+
+Examples:
+
+- First Meal Logged.
+- First Week Completed.
+- Hydration Champion.
+- First Workout.
+- Seven Days of Consistency.
+- First Couple Quest.
+- Teamwork Milestone.
+
+## Rewards
+
+Build a flexible reward system.
+
+Rewards may include:
+
+- Badges.
+- Profile decorations.
+- Titles.
+- Cosmetic unlocks.
+- Special milestones.
+
+Avoid rewards that encourage unhealthy behavior.
+
+---
+
+# 12. QUESTS AND CHALLENGES
+
+Create an engaging quest system.
+
+## Quest categories
+
+- Daily quests.
+- Weekly quests.
+- Individual quests.
+- Couple quests.
+- Special events.
+
+Each quest should include:
+
+- Name.
+- Description.
+- Category.
+- Requirements.
+- Progress.
+- Start date.
+- End date.
+- Reward.
+- Completion state.
+
+## Example quests
+
+Individual:
+
+- Log three meals today.
+- Reach your hydration target.
+- Complete a 20-minute walk.
+- Record your weight this week.
+- Complete a wellness habit.
+
+Couple:
+
+- Both partners log their meals today.
+- Complete three workouts together during the week.
+- Both reach their hydration targets.
+- Complete a weekly consistency challenge.
+- Encourage each other through the activity feed.
+
+Quest progress must be validated by the backend.
+
+Users must not be able to manually mark an unverified action as completed.
+
+A quest reward must only be issued once.
+
+---
+
+# 13. COUPLE EXPERIENCE
+
+This is one of the most important parts of the product.
+
+Build a dedicated **Together** section.
+
+## Shared dashboard
+
+Display:
+
+- Both partners' names.
+- Both partners' avatars.
+- Individual levels.
+- Individual XP.
+- Shared challenges.
+- Weekly couple progress.
+- Shared achievements.
+- Recent activity.
+- Encouragement and milestones.
+
+## Friendly competition
+
+Allow comparison of:
+
+- XP earned.
+- Quests completed.
+- Healthy habit consistency.
+- Challenge progress.
+
+Never rank users by:
+
+- Absolute kilograms lost.
+- Lowest calorie consumption.
+- Most restrictive diet.
+- Excessive exercise volume.
+
+## Couple challenges
+
+Support:
+
+- Shared objectives.
+- Individual contributions.
+- Progress tracking.
+- Completion conditions.
+- Rewards.
+- Start and end dates.
+- Challenge history.
+
+## Activity feed
+
+Show events such as:
+
+- Partner completed a workout.
+- Partner reached a hydration goal.
+- Partner unlocked an achievement.
+- Partner completed a quest.
+- Shared challenge progress.
+
+Respect each user's visibility preferences.
+
+## Reactions and encouragement
+
+Allow partners to:
+
+- React to activities.
+- Send encouragement.
+- Celebrate achievements.
+- Send short messages.
+
+## Chat
+
+Implement a simple private couple chat if practical within the development phase.
+
+Support:
+
+- Text messages.
+- Timestamps.
+- Read status.
+- Basic reactions.
+
+Chat must be private to the couple.
+
+---
+
+# 14. NOTIFICATIONS
+
+Implement in-app notifications for:
+
+- Achievements.
+- Level-ups.
+- Partner milestones.
+- Challenge updates.
+- Quest completion.
+- Encouragement.
+- Weekly summaries.
+
+Create notification preferences.
+
+Users should be able to control notification categories.
+
+Support:
+
+- Quiet hours.
+- User timezone.
+- Read/unread state.
+- Notification history.
+
+Avoid excessive notifications.
+
+Web push can be implemented later.
+
+---
+
+# 15. DESIGN SYSTEM AND VISUAL DIRECTION
+
+The interface must look like a real premium fitness product.
+
+## Visual goals
+
+- Modern.
+- Clean.
+- Elegant.
+- Friendly.
+- Premium.
+- Motivating.
+- Simple to navigate.
+- Mobile-first.
+
+Avoid:
+
+- Generic admin dashboard styling.
+- Excessive gradients.
+- Too many colors.
+- Excessive glassmorphism.
+- Overly childish game elements.
+- Cluttered layouts.
+- Unnecessary animations.
+
+## Design components
+
+Build reusable components for:
+
+- Buttons.
+- Inputs.
+- Selects.
+- Dialogs.
+- Cards.
+- Navigation.
+- Progress bars.
+- Charts.
+- Badges.
+- Quest cards.
+- Achievement cards.
+- Activity items.
+- Empty states.
+- Loading states.
+- Error states.
+- Confirmation dialogs.
+
+## Themes
+
+Support:
+
+- Light theme.
+- Dark theme.
+
+Persist the selected theme.
+
+## Navigation
+
+Use five main navigation destinations:
+
+1. Home.
+2. Nutrition.
+3. Activity.
+4. Quests.
+5. Together.
+
+Profile, settings, notifications, and account management should be secondary destinations.
+
+On mobile, use an intuitive bottom navigation.
+
+On desktop, use an appropriate sidebar or expanded navigation.
+
+---
+
+# 16. MULTILINGUAL SUPPORT
+
+Support three complete interface languages:
+
+- English.
+- French.
+- Arabic.
+
+Implement proper localization architecture.
+
+Requirements:
+
+- No hardcoded user-facing strings in components.
+- Translation files or an equivalent translation system.
+- Language selector.
+- Persisted language preference.
+- Localized dates.
+- Localized numbers.
+- Appropriate units.
+- Full Arabic RTL support.
+
+Arabic must not simply be displayed as translated English text.
+
+Implement correct:
+
+- Text alignment.
+- Layout direction.
+- Navigation behavior.
+- Form alignment.
+- Icons where directional.
+- Charts and labels.
+- Dialog positioning.
+
+Test Arabic on mobile and desktop.
+
+---
+
+# 17. PROGRESSIVE WEB APP
+
+The application must be installable as a PWA from the beginning.
+
+Implement:
+
+- Manifest.
+- App name.
+- Icons.
+- Theme colors.
+- Service worker.
+- Install prompt where supported.
+- Offline fallback.
+- Basic static asset caching.
+
+Important:
+
+Health mutations, nutrition records, XP transactions, and couple synchronization must require reliable server communication unless a proper offline synchronization system is implemented.
+
+Do not pretend an offline action has synced when it has not.
+
+Never cache sensitive health data in an uncontrolled manner.
+
+---
+
+# 18. DATABASE DESIGN
+
+Design the PostgreSQL schema with clear ownership, relationships, constraints, and indexes.
+
+Use UUID primary keys and UTC timestamps.
+
+Create migrations using Alembic.
+
+The following tables are expected, grouped by domain.
+
+## Accounts and couples
+
+- users
+- user_profiles
+- couples
+- couple_members
+- couple_invitations
+
+## Health
+
+- health_profiles
+- weight_entries
+- weight_goals
+- calorie_targets
+
+## Nutrition
+
+- foods
+- food_translations
+- food_nutrients
+- food_servings
+- meals
+- meal_entries
+- recipes
+- recipe_ingredients
+- favorite_foods
+
+## Activity and wellness
+
+- water_entries
+- hydration_targets
+- activity_entries
+- workout_plans
+- workout_exercises
+- workout_sessions
+- workout_session_exercises
+- sleep_entries
+- wellness_checkins
+- fasting_sessions
+- habits
+- habit_logs
+
+## Gamification
+
+- xp_transactions
+- levels
+- achievements
+- user_achievements
+- rewards
+- user_rewards
+
+## Quests and challenges
+
+- quests
+- quest_assignments
+- quest_progress
+- couple_challenges
+- challenge_participants
+
+## Social
+
+- messages
+- reactions
+- activity_events
+- notifications
+- notification_preferences
+
+## Administration
+
+- admin_users
+- audit_logs
+- system_settings
+
+You may adjust the schema when technically justified.
+
+## Database rules
+
+Implement constraints for:
+
+- Unique email addresses.
+- Valid user membership.
+- Maximum two active members per couple.
+- Positive food quantities.
+- Valid health ranges.
+- Unique XP event keys.
+- Unique user achievements.
+- Valid challenge dates.
+- Foreign key integrity.
+
+Use appropriate indexes for:
+
+- User weight history.
+- Meal history.
+- Food search.
+- XP history.
+- Quest assignments.
+- Couple activity feed.
+- Messages.
+- Notifications.
+
+Preserve historical health records.
+
+Do not store important application state only in browser storage.
+
+---
+
+# 19. BACKEND API
+
+Create a versioned REST API using:
+
+`/api/v1/`
+
+Organize routes by domain.
+
+Expected endpoint groups:
+
+## Authentication
+
+- Register.
+- Login.
+- Logout.
+- Refresh session.
+- Verify email.
+- Forgot password.
+- Reset password.
+- Get current user.
+
+## Users and couples
+
+- Get own profile.
+- Update own profile.
+- Create couple.
+- Create invitation.
+- Accept invitation.
+- Get couple.
+- Get couple members.
+- Disconnect from couple.
+
+## Health
+
+- Get health profile.
+- Update health profile.
+- Get calorie targets.
+- Recalculate targets.
+- List weight entries.
+- Create weight entry.
+- Update weight entry.
+- Delete weight entry.
+- Get progress summary.
+
+## Nutrition
+
+- Search foods.
+- Get food details.
+- Create custom food.
+- Manage favorites.
+- Create meals.
+- List meals.
+- Add meal entries.
+- Edit meal entries.
+- Delete meal entries.
+- Manage recipes.
+- Get daily nutrition summary.
+- Get nutrition history.
+
+## Activity
+
+- Add water.
+- Get hydration history.
+- Update hydration target.
+- Log activity.
+- Manage workouts.
+- Log workout sessions.
+- Manage sleep entries.
+- Manage wellness check-ins.
+- Manage habits.
+- Log habit completion.
+
+## Gamification
+
+- Get game profile.
+- Get XP history.
+- Get achievements.
+- Get rewards.
+- Get quests.
+- Get quest progress.
+- Get couple challenges.
+- Get leaderboard.
+
+## Social
+
+- Get couple feed.
+- React to activity.
+- Send messages.
+- Get messages.
+- Get notifications.
+- Mark notifications as read.
+- Update notification preferences.
+
+Every mutation must enforce authentication, ownership, validation, and authorization.
+
+All list endpoints must support appropriate pagination and filtering.
+
+---
+
+# 20. SECURITY REQUIREMENTS
+
+Treat this as an application containing sensitive personal health information.
+
+Implement:
+
+- Secure password hashing.
+- Secure session handling.
+- Authentication middleware.
+- Role and ownership checks.
+- Input validation.
+- Output validation where appropriate.
+- Rate limiting.
+- Protection against IDOR.
+- Protection against cross-user data access.
+- Secure environment variables.
+- Audit logging for sensitive operations.
+- Appropriate CORS configuration.
+- Safe error responses.
+- Database transactions.
+- Backup documentation.
+
+Never:
+
+- Put passwords or secrets in source code.
+- Expose private user records.
+- Trust client-provided XP values.
+- Trust client-provided quest completion.
+- Allow users to modify another user's records.
+- Expose invitation tokens in logs.
+- Use mock authentication in production.
+
+For every couple-related API request, validate:
+
+1. Authenticated user.
+2. Active couple membership.
+3. Resource ownership or visibility.
+4. Permission to perform the requested action.
+
+---
+
+# 21. REQUIRED SCREENS
+
+Build the following screens.
+
+## Public and authentication
+
+1. Private landing/invitation screen.
+2. Registration.
+3. Login.
+4. Email verification.
+5. Forgot password.
+6. Reset password.
+
+## Onboarding
+
+7. Welcome.
+8. Personal information.
+9. Body measurements.
+10. Activity level.
+11. Weight goal.
+12. Recommended targets.
+13. Review targets.
+14. Preferences.
+15. Connect with partner.
+
+## Home
+
+16. Personal dashboard.
+17. Daily summary.
+18. Weight progress.
+19. Weekly summary.
+
+## Nutrition
+
+20. Nutrition dashboard.
+21. Food diary.
+22. Add food.
+23. Food search.
+24. Food details.
+25. Custom food.
+26. Recipe list.
+27. Recipe builder.
+28. Nutrition analytics.
+
+## Activity
+
+29. Activity dashboard.
+30. Water tracker.
+31. Workout plans.
+32. Workout details.
+33. Workout logging.
+34. Workout history.
+35. Sleep tracking.
+36. Mood and energy.
+37. Habits.
+38. Wellness history.
+
+## Quests and gamification
+
+39. Quest dashboard.
+40. Daily quests.
+41. Weekly quests.
+42. Couple quests.
+43. Quest details.
+44. XP history.
+45. Level progress.
+46. Achievements.
+47. Rewards.
+
+## Together
+
+48. Couple dashboard.
+49. Partner profile.
+50. Shared progress.
+51. Leaderboard.
+52. Challenges.
+53. Challenge details.
+54. Activity feed.
+55. Private chat.
+56. Shared achievements.
+
+## Account and settings
+
+57. Personal profile.
+58. Health settings.
+59. Goals and targets.
+60. Preferences.
+61. Notifications.
+62. Language.
+63. Privacy and sharing.
+64. Couple management.
+65. Data export.
+66. Account deletion.
+
+You do not need to expose every screen in the main navigation. Organize them logically.
+
+---
+
+# 22. DEVELOPMENT PHASES
+
+Build the application incrementally.
+
+Do not try to implement everything in one uncontrolled operation.
+
+## Phase 0 — Infrastructure
+
+Implement:
+
+- Project structure.
+- Next.js TypeScript frontend.
+- FastAPI backend.
+- PostgreSQL.
+- Docker Compose.
+- Environment configuration.
+- SQLAlchemy.
+- Alembic.
+- Database connection.
+- Health endpoint.
+- Frontend-to-backend connection.
+- README and setup instructions.
+
+Acceptance criteria:
+
+A clean local environment starts successfully and the frontend can communicate with the backend.
+
+## Phase 1 — Authentication and couple setup
+
+Implement:
+
+- Registration.
+- Login/logout.
+- Secure password storage.
+- Sessions.
+- Profiles.
+- Invitation flow.
+- Couple creation.
+- Couple joining.
+- Authorization tests.
+
+Acceptance criteria:
+
+Two separate users can register, connect, and access their authorized couple space.
+
+## Phase 2 — Health system
+
+Implement:
+
+- Onboarding.
+- Health profiles.
+- Weight history.
+- Goal management.
+- BMR/TDEE calculations.
+- Calorie targets.
+- Weight charts.
+- Weekly trends.
+
+Acceptance criteria:
+
+Both partners have independent health profiles and correct individual targets.
+
+## Phase 3 — Nutrition
+
+Implement:
+
+- Food schema.
+- Seed food catalog.
+- Food search.
+- Food details.
+- Serving definitions.
+- Meal diary.
+- Meal entry CRUD.
+- Nutritional calculations.
+- Daily summaries.
+- Custom foods.
+- Favorites.
+- Recipes.
+
+Acceptance criteria:
+
+A user can search for food, log a meal, edit it, and see correct daily totals.
+
+## Phase 4 — Activity and wellness
+
+Implement:
+
+- Water tracking.
+- Hydration targets.
+- Activity logging.
+- Workout plans.
+- Workout sessions.
+- Sleep.
+- Mood and energy.
+- Habits.
+
+Acceptance criteria:
+
+Users can record and review their wellness activities.
+
+## Phase 5 — Gamification
+
+Implement:
+
+- XP engine.
+- XP ledger.
+- Idempotency.
+- Levels.
+- Quests.
+- Quest progress.
+- Achievements.
+- Rewards.
+
+Acceptance criteria:
+
+Verified actions award the correct XP exactly once.
+
+## Phase 6 — Couple features
+
+Implement:
+
+- Shared dashboard.
+- Shared progress.
+- Couple challenges.
+- Cooperative quests.
+- Leaderboard.
+- Activity feed.
+- Reactions.
+- Private chat.
+- Shared achievements.
+
+Acceptance criteria:
+
+Both partners can see permitted shared information and participate in challenges without accessing each other's private records.
+
+## Phase 7 — PWA and notifications
+
+Implement:
+
+- PWA manifest.
+- Icons.
+- Service worker.
+- Installability.
+- Offline fallback.
+- In-app notifications.
+- Notification preferences.
+- Quiet hours.
+
+Acceptance criteria:
+
+The app is installable and its online/offline behavior is honest and predictable.
+
+## Phase 8 — Localization and design completion
+
+Implement:
+
+- English.
+- French.
+- Arabic.
+- RTL.
+- Light theme.
+- Dark theme.
+- Responsive layouts.
+- Accessibility.
+- Loading, error, and empty states.
+
+Acceptance criteria:
+
+All major flows work in all three languages on mobile and desktop.
+
+## Phase 9 — Testing and release preparation
+
+Implement:
+
+- Unit tests.
+- API integration tests.
+- Authorization tests.
+- Nutrition calculation tests.
+- XP duplication tests.
+- Couple isolation tests.
+- End-to-end tests.
+- Mobile browser tests.
+- Security review.
+- Backup and restore documentation.
+- Release documentation.
+
+Acceptance criteria:
+
+No critical feature is marked complete without tests and validation.
+
+---
+
+# 23. MVP PRIORITIES
+
+Prioritize a working MVP before advanced features.
+
+## MVP — Must work
+
+- Two users can register and connect.
+- Each user can complete onboarding.
+- Each user has personal health targets.
+- Weight can be logged and viewed.
+- Meals can be logged.
+- Calories and macros are calculated.
+- Water can be tracked.
+- Activity can be logged.
+- XP and levels work.
+- Daily and weekly quests work.
+- Shared couple dashboard works.
+- Couple challenges work.
+- PWA can be installed.
+- English, French, and Arabic work.
+
+## Version 2
+
+- Advanced recipes.
+- More achievements and rewards.
+- Chat and social enhancements.
+- Advanced analytics.
+- Better notifications.
+- More sophisticated challenges.
+
+## Version 3
+
+- AI food recognition.
+- Barcode scanning.
+- Nutrition label OCR.
+- Voice-based logging.
+- Health integrations.
+- Personalized insights.
+
+Do not delay the MVP for Version 2 or Version 3 features.
+
+---
+
+# 24. TESTING AND QUALITY RULES
+
+These rules are mandatory.
+
+1. Build one module at a time.
+2. Inspect the existing code before modifying it.
+3. Never overwrite working code without understanding it.
+4. Review every database migration.
+5. Write tests for important business logic.
+6. Backend owns health calculations and gamification rules.
+7. Keep API schemas separate from database models.
+8. Validate all inputs.
+9. Enforce ownership on every private resource.
+10. Protect all couple endpoints.
+11. Prevent duplicate XP.
+12. Preserve historical health and nutrition records.
+13. Do not use fake data to claim that a feature works.
+14. Keep the application runnable after every phase.
+15. Update documentation when architecture changes.
+16. Never mark a feature complete without verifying it.
+
+When a feature is not implemented, label it clearly as `NOT IMPLEMENTED`.
+
+When a feature is partially implemented, label it `PARTIALLY IMPLEMENTED`.
+
+Do not hide unfinished work behind decorative UI.
+
+---
+
+# 25. HOW YOU MUST WORK
+
+You are responsible for implementing the actual application.
+
+Follow this workflow.
+
+### Step 1 — Inspect
+
+Inspect the current workspace and identify:
+
+- Existing files.
+- Existing project structure.
+- Installed dependencies.
+- Existing code.
+- Existing configuration.
+- Existing database setup.
+
+Do not assume the workspace is empty.
+
+### Step 2 — Establish the architecture
+
+Create or update:
+
+- Project structure.
+- Product specification.
+- Database documentation.
+- API documentation.
+- Security documentation.
+- Development instructions.
+
+### Step 3 — Implement Phase 0
+
+Do not start by building a beautiful dashboard on top of fake data.
+
+First establish a working project foundation.
+
+### Step 4 — Verify
+
+Run the available:
+
+- Build commands.
+- Type checks.
+- Linting.
+- Tests.
+- Database migrations.
+- Health checks.
+
+Fix errors before proceeding.
+
+### Step 5 — Continue phase by phase
+
+Once a phase passes its acceptance criteria, move to the next phase.
+
+Keep a persistent `IMPLEMENTATION_STATUS.md` file containing:
+
+- Completed phases.
+- In-progress phases.
+- Remaining tasks.
+- Known bugs.
+- Test results.
+- Architecture decisions.
+- Next exact task.
+
+### Step 6 — Communicate honestly
+
+After each development phase, report:
+
+1. What was implemented.
+2. Which files were created or modified.
+3. Which features actually work.
+4. Which tests were executed.
+5. Which tests passed or failed.
+6. Known limitations.
+7. What remains.
+8. The next implementation step.
+
+If you cannot execute a command, state that clearly.
+
+Do not invent test results.
+
+---
+
+# 26. FIRST TASK — START BUILDING NOW
+
+Start with the actual workspace inspection.
+
+Then immediately implement **Phase 0: Infrastructure**.
+
+Do not spend the entire response explaining the architecture.
+
+Do not generate only a roadmap.
+
+Do not create a static UI prototype and call it an application.
+
+Create the actual project files, configuration, backend, frontend foundation, database connection, migrations, and Docker Compose setup.
+
+The first successful milestone must include:
+
+- Next.js frontend running.
+- FastAPI backend running.
+- PostgreSQL running.
+- Successful database connection.
+- Alembic initialized.
+- `GET /api/v1/health` returning a valid response.
+- Frontend successfully communicating with the backend.
+- `.env.example`.
+- Docker Compose configuration.
+- README with exact setup instructions.
+
+After completing Phase 0, test it and update `IMPLEMENTATION_STATUS.md`.
+
+Then continue with Phase 1 when the environment and available execution capabilities allow it.
+
+**Begin by inspecting the workspace and implementing Phase 0 now.**

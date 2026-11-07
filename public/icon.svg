@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="cfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#059669" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="#0f172a"/>
+  <!-- Two stylized glowing interconnected wellness rings -->
+  <g filter="url(#shadow)">
+    <!-- Ring 1 (Partner 1) -->
+    <circle cx="210" cy="256" r="110" fill="none" stroke="url(#cfGrad)" stroke-width="32" stroke-linecap="round"/>
+    <!-- Ring 2 (Partner 2) -->
+    <circle cx="302" cy="256" r="110" fill="none" stroke="url(#accentGrad)" stroke-width="32" stroke-linecap="round" stroke-dasharray="450 120"/>
+    <!-- Interlock pulse spark / Heart symbol -->
+    <path d="M256 215 C256 195 240 180 220 180 C200 180 185 198 185 220 C185 245 220 280 256 315 C292 280 327 245 327 220 C327 198 312 180 292 180 C272 180 256 195 256 215 Z" fill="#ffffff" opacity="0.95"/>
+  </g>
+</svg>
